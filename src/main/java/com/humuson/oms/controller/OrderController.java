@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -104,47 +106,17 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    /**
-     * 입력 데이터를 외부 시스템으로 전송합니다 (리스트 형태).
-     *
-     * @param url    외부 시스템의 URL
-     * @param orders 전송할 주문 리스트
-     * @return 전송 결과 메시지
-     */
-    @PostMapping("/external/sendList")
-    @Operation(summary = "입력 데이터를 외부 시스템으로 전송", description = "입력 데이터를 외부 시스템으로 전송합니다 (리스트 형태).")
-    public ResponseEntity<String> sendOrdersToExternalAsList(@RequestParam String url, @Validated @RequestBody List<OrderVO> orders) {
-        orderService.sendOrdersToExternal(url, orders);
-        return ResponseEntity.ok("주문 데이터가 외부 시스템으로 전송되었습니다.");
-    }
+    @PostMapping("/external/singleFetch")
+    @Operation(summary = "외부 시스템에서 주문 데이터 저장", description = "외부 시스템에서 주문 데이터를 가져와 저장합니다")
+    public ResponseEntity<OrderVO> fetchOrderFromExternal(@RequestParam String url, @RequestParam String orderId) {
+        Map<String, OrderVO> orders = orderService.fetchOrderMapsFromExternalSystem(url);
+        if(!orders.containsKey(orderId))
+            throw new CustomException(new OrderVO(), "외부 시스템에 해당 주문번호가 없습니다. "+orderId);
 
-    /**
-     * 주문 데이터를 외부 시스템으로 전송합니다 (맵 형태).
-     *
-     * @param url    외부 시스템의 URL
-     * @param orders 전송할 주문 맵
-     * @return 전송 결과 메시지
-     */
-    @PostMapping("/external/sendMap")
-    @Operation(summary = "입력 데이터를 외부 시스템으로 전송", description = "입력 데이터를 외부 시스템으로 전송합니다 (맵 형태).")
-    public ResponseEntity<String> sendOrdersToExternalAsMap(@RequestParam String url, @Validated @RequestBody Map<String, OrderVO> orders) {
-        orderService.sendOrdersToExternalAsMap(url, orders);
-        return ResponseEntity.ok("주문 데이터가 외부 시스템으로 전송되었습니다.");
-    }
+        OrderVO order = orders.get(orderId);
+        setOrder(order); // 전체 주문 목록을 설정 (필요한 경우)
 
-    /**
-     * 단일 주문 데이터를 외부 시스템으로 전송합니다.
-     *
-     * @param url   외부 시스템의 URL
-     * @param order 전송할 주문
-     * @return 전송 결과 메시지
-     */
-    @PostMapping("/external/send")
-    @Operation(summary = "입력 데이터를 외부 시스템으로 전송", description = "입력 데이터를 외부 시스템으로 전송합니다 (단일 형태).")
-    public ResponseEntity<String> sendOrdersToExternalSingle(@RequestParam String url, @Validated @RequestBody OrderVO order) {
-        orderService.sendOrdersToExternalSingle(url, order);
-        setOrder(order);
-        return ResponseEntity.ok("주문 데이터가 외부 시스템으로 전송되었습니다.");
+        return ResponseEntity.ok(order); // 주문 객체 반환
     }
 
     /**

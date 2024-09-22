@@ -16,7 +16,7 @@ public class OrderVO {
     private String orderId;
     private String customerName;
     @JsonDeserialize(using = DateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "Asia/Seoul")
     private Date orderDate;
     private String orderStatus; // 예: 처리 중, 배송 중, 완료
 }

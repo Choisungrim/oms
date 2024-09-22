@@ -24,23 +24,28 @@ public class OrderIntegrationImpl implements OrderIntegration {
 
     @Override
     public List<OrderVO> fetchOrdersFromExternalSystem(String url) {
-        ResponseEntity<List<OrderVO>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<OrderVO>>() {
-        });
+        ResponseEntity<List<OrderVO>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<OrderVO>>() {}
+        );
+        return response.getBody();
+    }
+
+    @Override
+    public Map<String,OrderVO> fetchOrderMapsFromExternalSystem(String url) {
+        ResponseEntity<Map<String,OrderVO>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Map<String,OrderVO>>() {}
+        );
         return response.getBody();
     }
 
     @Override
     public void sendOrdersToExternalSystem(String url, List<OrderVO> orders) {
-        restTemplate.postForEntity(url, orders, Void.class);
-    }
-
-    @Override
-    public void sendOrdersToExternalSingle(String url, OrderVO orders) {
-        restTemplate.postForEntity(url, orders, Void.class);
-    }
-
-    @Override
-    public void sendOrdersToExternalSystemAsMap(String url, Map<String, OrderVO> orders) {
         restTemplate.postForEntity(url, orders, Void.class);
     }
 }

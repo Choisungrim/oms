@@ -52,16 +52,8 @@ public class OrderServiceImpl implements OrderService {
         return orderIntegration.fetchOrdersFromExternalSystem(url);
     }
 
-    public void sendOrdersToExternal(String url, List<OrderVO> orders) {
-        orderIntegration.sendOrdersToExternalSystem(url, orders);
-    }
-
-    public void sendOrdersToExternalSingle(String url, OrderVO orders) {
-        orderIntegration.sendOrdersToExternalSingle(url, orders);
-    }
-
-    public void sendOrdersToExternalAsMap(String url, Map<String, OrderVO> orders) {
-        orderIntegration.sendOrdersToExternalSystemAsMap(url, orders);
+    public Map<String,OrderVO> fetchOrderMapsFromExternalSystem(String url) {
+        return orderIntegration.fetchOrderMapsFromExternalSystem(url);
     }
 
     public void sendHoldOrdersToExternalSystem(String url) {
@@ -69,10 +61,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private boolean isValidOrderStatus(String status) {
-        return status.toUpperCase().equals(SystemConstants.OrderState.CREATE) ||
-                status.toUpperCase().equals(SystemConstants.OrderState.RUNNING) ||
-                status.toUpperCase().equals(SystemConstants.OrderState.PENDING) ||
-                status.toUpperCase().equals(SystemConstants.OrderState.SHIPPING) ||
-                status.toUpperCase().equals(SystemConstants.OrderState.COMPLETED);
+        return status.equalsIgnoreCase(SystemConstants.OrderState.CREATED) ||
+                status.equalsIgnoreCase(SystemConstants.OrderState.RUNNING) ||
+                status.equalsIgnoreCase(SystemConstants.OrderState.PENDING) ||
+                status.equalsIgnoreCase(SystemConstants.OrderState.SHIPPING) ||
+                status.equalsIgnoreCase(SystemConstants.OrderState.COMPLETED);
     }
 }

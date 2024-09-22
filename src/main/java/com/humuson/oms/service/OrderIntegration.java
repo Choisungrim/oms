@@ -7,10 +7,7 @@ import java.util.Map;
 
 public interface OrderIntegration {
     List<OrderVO> fetchOrdersFromExternalSystem(String url);
-
+    Map<String,OrderVO> fetchOrderMapsFromExternalSystem(String url);
     void sendOrdersToExternalSystem(String url, List<OrderVO> orders);
 
-    void sendOrdersToExternalSingle(String url, OrderVO orders);
-
-    void sendOrdersToExternalSystemAsMap(String url, Map<String, OrderVO> orders);
 }

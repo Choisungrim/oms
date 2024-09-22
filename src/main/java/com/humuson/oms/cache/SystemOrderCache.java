@@ -1,6 +1,8 @@
 package com.humuson.oms.cache;
 
 import com.humuson.oms.entity.OrderVO;
+import com.humuson.oms.exception.CustomException;
+import org.springframework.core.annotation.Order;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +14,10 @@ public class SystemOrderCache {
 
     // 주문 저장
     public static void saveOrder(OrderVO order) {
-        orderRepository.put(order.getOrderId(), order);
+        if (!orderRepository.containsKey(order.getOrderId()))
+            orderRepository.put(order.getOrderId(), order);
+        else
+            throw new CustomException(order, order.getOrderId(), "중복된 주문 ");
     }
 
     // 주문 조회
@@ -35,7 +40,13 @@ public class SystemOrderCache {
 
     // 주문 제거
     public static void removeOrder(String orderId) {
-        orderRepository.remove(orderId);
+        if (!orderRepository.containsKey(orderId))
+        {
+            OrderVO order = getOrder(orderId);
+            orderRepository.remove(orderId, order);
+        }
+        else
+            throw new CustomException(new OrderVO(), orderId);
     }
 
 }
