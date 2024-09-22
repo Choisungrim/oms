@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
         return orderIntegration.fetchOrderMapsFromExternalSystem(url);
     }
 
-    public void sendHoldOrdersToExternalSystem(String url) {
+    public void sendOrdersToExternalSystem(String url) {
         orderIntegration.sendOrdersToExternalSystem(url, getAllOrderAsList());
     }
 

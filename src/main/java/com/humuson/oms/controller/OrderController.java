@@ -128,7 +128,7 @@ public class OrderController {
     @PostMapping("/external/localDataSend")
     @Operation(summary = "내부에 존재하는 주문 데이터를 외부 시스템으로 전송", description = "내부에 존재하는 주문 데이터를 외부 시스템으로 전송")
     public ResponseEntity<String> sendHoldOrdersToExternalSystem(@RequestParam String url) {
-        orderService.sendHoldOrdersToExternalSystem(url);
+        orderService.sendOrdersToExternalSystem(url);
         return ResponseEntity.ok("내부 주문 데이터가 외부 시스템으로 전송되었습니다.");
     }
 }
