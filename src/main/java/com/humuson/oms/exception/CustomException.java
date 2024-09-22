@@ -3,8 +3,8 @@ package com.humuson.oms.exception;
 import com.humuson.oms.entity.OrderVO;
 
 public class CustomException extends RuntimeException {
-    public CustomException(String orderId) {
-        super("주문을 찾을 수 없습니다: " + orderId + "번 주문");
+    public CustomException(String message) {
+        super(message);
     }
 
     public CustomException(OrderVO vo) {

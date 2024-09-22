@@ -3,17 +3,13 @@ package com.humuson.oms.controller;
 import com.humuson.oms.entity.OrderVO;
 import com.humuson.oms.exception.CustomException;
 import com.humuson.oms.service.OrderServiceImpl;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +62,7 @@ public class OrderController {
     public ResponseEntity<OrderVO> getOrder(@PathVariable String orderId) {
         OrderVO order = orderService.getOrderById(orderId);
         if (order == null)
-            throw new CustomException(orderId);
+            throw new CustomException(new OrderVO(),orderId);
         return ResponseEntity.ok(order);
     }
 
@@ -106,15 +102,16 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    @PostMapping("/external/singleFetch")
+    @PostMapping("/external/fetchSingle")
     @Operation(summary = "외부 시스템에서 주문 데이터 저장", description = "외부 시스템에서 주문 데이터를 가져와 저장합니다")
     public ResponseEntity<OrderVO> fetchOrderFromExternal(@RequestParam String url, @RequestParam String orderId) {
         Map<String, OrderVO> orders = orderService.fetchOrderMapsFromExternalSystem(url);
+
         if(!orders.containsKey(orderId))
             throw new CustomException(new OrderVO(), "외부 시스템에 해당 주문번호가 없습니다. "+orderId);
 
         OrderVO order = orders.get(orderId);
-        setOrder(order); // 전체 주문 목록을 설정 (필요한 경우)
+        setOrder(order);
 
         return ResponseEntity.ok(order); // 주문 객체 반환
     }
