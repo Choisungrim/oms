@@ -2,7 +2,7 @@ package com.humuson.oms.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.humuson.oms.util.DateDeserializer;
+import com.humuson.oms.util.serialize.DateDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,12 +1,10 @@
-package com.humuson.oms.util;
+package com.humuson.oms.util.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.humuson.oms.exception.CustomException;
-import com.humuson.oms.util.constants.SystemConstants;
 
 import java.io.IOException;
 import java.text.ParseException;

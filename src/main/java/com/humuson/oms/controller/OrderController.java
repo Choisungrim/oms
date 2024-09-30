@@ -3,6 +3,8 @@ package com.humuson.oms.controller;
 import com.humuson.oms.entity.OrderVO;
 import com.humuson.oms.exception.CustomException;
 import com.humuson.oms.service.OrderServiceImpl;
+import com.humuson.oms.util.annotation.PlantUML;
+import com.humuson.oms.util.aspect.PlantUMLAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,13 @@ import java.util.Map;
 @Validated
 @RequestMapping("/api/orders")
 @Tag(name = "Order Management", description = "주문 관리 API")
+@PlantUML
 public class OrderController {
 
     private final OrderServiceImpl orderService;
+
+    @Autowired
+    private PlantUMLAspect plantUMLAspect;
 
     @Autowired
     public OrderController(OrderServiceImpl orderServiceImpl) {
