@@ -97,43 +97,14 @@ public class UMLController {
         }
     }
     @GetMapping("/generate-uml/app")
-    public ResponseEntity<byte[]> generateUMLAPP(@RequestParam String appUrl) {
-        // 1. UML 코드 생성
+    public ResponseEntity<String> generateUMLAPP(@RequestParam String appUrl) {
         String umlCode = umlGenerator.generateRestTargetUML(appUrl);
-        String encodedUml = encodeUml(umlCode); // UML 코드 인코딩
+        System.out.println("Generated UML Code: \n" + umlCode); // 생성된 UML 코드 로그
 
-
-        // 2. PlantUML 서버에 요청
-        String plantUmlServerUrl = "https://www.plantuml.com/plantuml/png/";
-
-        // POST 요청 설정
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        String body = "umlcode=" + umlCode;
-        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-
-        // PlantUML 서버에 요청
-        ResponseEntity<byte[]> response = restTemplate.exchange(plantUmlServerUrl, HttpMethod.POST, requestEntity, byte[].class);
-        System.out.println(response);
-        // 응답 처리
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_PNG)
-                    .body(response.getBody());
-        } else if (response.getStatusCode() == HttpStatus.FOUND) {
-            // 리디렉션 URL을 확인
-            String redirectUrl = response.getHeaders().getLocation().toString();
-            // 리디렉션된 URL에 대한 요청을 재전송
-            ResponseEntity<byte[]> redirectResponse = restTemplate.exchange(redirectUrl, HttpMethod.GET, null, byte[].class);
-            System.out.println(redirectResponse);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_PNG)
-                    .body(redirectResponse.getBody());
-        } else {
-            return ResponseEntity.status(response.getStatusCode()).body(null);
-        }
+        // 2. 생성된 UML 코드를 문자열 형태로 반환
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN) // MIME 타입을 텍스트로 설정
+                .body(umlCode); // 생성된 UML 코드를 응답 본문으로 반환
     }
     private String encodeUml(String umlCode) {
         // UML 코드를 Base64로 인코딩
